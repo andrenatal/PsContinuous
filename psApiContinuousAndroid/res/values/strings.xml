@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Push  the button and speak to recognize</string>
+    <string name="app_name">Pocketsphinx Consumer</string>
+    <string name="gram">OPEN BROWSER \nCALL MARY \nENTER PLACE</string>
+</resources>
