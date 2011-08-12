@@ -54,7 +54,7 @@ public class GrammarTools  {
 	public String pathhmm;
 	Resources resources;
 	public boolean recycledecoder;
-	private int dictbase;
+	private String dictbase;
 	private Hashtable<String, Hashtable<String, String>> htDict;
 	private Context _context;
 	
@@ -65,8 +65,8 @@ public class GrammarTools  {
 		pathdic = String.format(  "/sdcard/Android/data/pocketsphinx/lm/%s/dic.dic" , language );
 		pathhmm = String.format( "/sdcard/Android/data/pocketsphinx/hmm/%s/" , language);
 
-		if (language.equals("en_US")) dictbase = R.raw.cmudict07a;
-		if (language.equals("es")) dictbase = R.raw.voxforge_es_sphinx_fix;
+		if (language.equals("en_US")) dictbase = "enus.db";
+		if (language.equals("es")) dictbase = "es.db";
 		
 		this._context = _context;
 	}
@@ -93,7 +93,7 @@ public class GrammarTools  {
 	    	CopyFileTo(myResources.openRawResource(R.raw.transitionmatrices),new FileOutputStream(new File(dirAm,"transition_matrices")));
 	    	CopyFileTo(myResources.openRawResource(R.raw.variances),new FileOutputStream(new File(dirAm,"variances")));    	
 	    	CopyFileTo(myResources.openRawResource(R.raw.mdef),new FileOutputStream(new File(dirAm,"mdef")));  		
-	    	
+	    		    	
 	    	// copia para os bancos
 	    	CopyFileTo(myResources.openRawResource(R.raw.enus),new FileOutputStream(new File("/data/data/com.pocketsphinxapi.consumer/databases/","enus.db")));
 	    	
@@ -107,7 +107,11 @@ public class GrammarTools  {
 	    	CopyFileTo(myResources.openRawResource(R.raw.featuretransform),new FileOutputStream(new File(dirAm,"feature_transform")));    	
 	    	CopyFileTo(myResources.openRawResource(R.raw.transitionmatriceses),new FileOutputStream(new File(dirAm,"transition_matrices")));
 	    	CopyFileTo(myResources.openRawResource(R.raw.varianceses),new FileOutputStream(new File(dirAm,"variances")));    	
-	    	CopyFileTo(myResources.openRawResource(R.raw.mdefes),new FileOutputStream(new File(dirAm,"mdef")));  		    		
+	    	CopyFileTo(myResources.openRawResource(R.raw.mdefes),new FileOutputStream(new File(dirAm,"mdef")));
+	    	
+	    	// copia para os bancos
+	    	CopyFileTo(myResources.openRawResource(R.raw.es),new FileOutputStream(new File("/data/data/com.pocketsphinxapi.consumer/databases/","es.db")));
+	    	
     	}
     }		
 		
@@ -158,7 +162,7 @@ public class GrammarTools  {
 	    	FileWriter outFile = new FileWriter(pathdic);
 	    	PrintWriter out = new PrintWriter(outFile);        	
 	        	        
-	    	DataBaseHelper dh = new DataBaseHelper(_context , "enus.db" , resources);
+	    	DataBaseHelper dh = new DataBaseHelper(_context , dictbase , resources);
 	    
 	 
 		 	try {

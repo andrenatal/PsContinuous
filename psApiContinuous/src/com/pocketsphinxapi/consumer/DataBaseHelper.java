@@ -93,8 +93,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     
     public List<String> selectAll(String word) {
         List<String> list = new ArrayList<String>();
-        Cursor cursor = this.myDataBase.query(DB_NAME.substring(0 ,  DB_NAME.indexOf(".")  ), new String[] { "_id" , "fonema" },
-          "_id = '"+word+"' or _id like '"+word+"(%' ", null, null, null, null);
+        Cursor cursor = this.myDataBase.query(DB_NAME.substring(0 ,  DB_NAME.indexOf(".")  ), new String[] { "word" , "fonema" },
+          "word = '"+word+"' or word like '"+word+"(%' ", null, null, null, null);
         if (cursor.moveToFirst()) {
            do {
               list.add(cursor.getString(0) + "	" + cursor.getString(1));
