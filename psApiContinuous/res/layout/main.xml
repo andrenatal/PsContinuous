@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"    >
 <EditText android:layout_width="match_parent" android:text="@string/hello" android:id="@+id/tbx2" android:layout_height="100dip"></EditText>
-<Button android:text="RecordNRec" android:layout_gravity="center_horizontal" android:layout_weight="0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonrec"></Button>
+<Button android:layout_width="wrap_content" android:text="Stop Listen" android:layout_height="wrap_content" android:layout_gravity="right" android:id="@+id/buttonstop"></Button>
+<Button android:layout_width="wrap_content" android:text="RecordNRec" android:layout_height="wrap_content" android:layout_weight="0" android:layout_gravity="left" android:id="@+id/buttonrec"></Button>
 <EditText android:layout_width="match_parent" android:id="@+id/tbxg" android:text="@string/gram" android:layout_height="150dip"></EditText>
 <Button android:text="Push to Generate Grammar" android:layout_gravity="center_horizontal" android:layout_weight="0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttongr"></Button>
 

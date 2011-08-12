@@ -2,11 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path="jni"/>
-	<classpathentry kind="lib" path="C:/Users/andre/Desktop/libsapache/apache-mime4j-0.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/andre/Desktop/libsapache/httpclient-4.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/andre/Desktop/libsapache/httpcore-4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/andre/Desktop/libsapache/httpmime-4.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/libs/libsapache/apache-mime4j-0.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/libs/libsapache/httpclient-4.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/libs/libsapache/httpcore-4.1.jar"/>
+	<classpathentry kind="lib" path="D:/libs/libsapache/httpmime-4.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,7 +2,7 @@
 <resources>
     <string name="hello">Push  the button and speak to recognize</string>
     <string name="app_name">Pocketsphinx Consumer</string>
-    <string name="gram">ADD \nSUBTRACT \nMULTIPLY \nDIVIDE \nPLUS \nMINUS \nTIMES \nOVER \nONE \nTWO \nTHREE \nFOUR \nFIVE</string>
+    <string name="gram">ADD \nSUBTRACT \nMULTIPLY \nDIVIDE \nPLUS \nMINUS \nTIMES \nOVER \nONE \nTWO \nTHREE \nFOUR \nFIVE \nSIX \nSEVEN \nEIGHT \nNINE  </string>
 </resources>
 
 

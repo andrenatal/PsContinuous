@@ -98,6 +98,7 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 	
 	Button bgram; 
 	Button brec;
+	Button bstop;
 
 	private ProgressDialog rec_dialog;
 	
@@ -117,12 +118,14 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 			bgram = (Button)findViewById(R.id.buttongr);			
 			bgram.setOnTouchListener(this);
 			
-			//this.performance_text = (TextView) findViewById(R.id.PerformanceText);
+			bstop= (Button)findViewById(R.id.buttonstop);			
+			bstop.setOnTouchListener(this);
+			
 			this.edit_text = (EditText)findViewById(R.id.tbx2);
 	        	       
 			try {
 				
-				gram = new GrammarTools("en_US"); 
+				gram = new GrammarTools("en_US" , this.getApplicationContext()); 
 				gram.InstallModels("en_US",getResources());
 				
 				//gram = new GrammarTools("es"); 
@@ -153,14 +156,26 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 	{
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			
+						
+			// Start Listening
 			if (arg0.equals(brec))
 			{
-				try {				
-					this.rec.doRecognize(); 				
-					start_date = new Date();
+				try {				 				
 					this.listening = true;
+										
 					this.rec.start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+						
+			// Stop Listening
+			if (arg0.equals(bstop))
+			{
+				try 
+				{				
+					this.rec.shutdown();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -170,15 +185,11 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 			
 			if (arg0.equals(bgram))
 			{							
-				try {
-					
-					
-					
+				try 
+				{														
 					this.rec_dialog = ProgressDialog.show(this, "Working", "Generating grammar ..", true,false);
 					Thread thread = new Thread(this);
-	                thread.start();
-					
-
+	                thread.start();					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -188,28 +199,6 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 			
 			break;
 		case MotionEvent.ACTION_UP:
-			if (arg0.equals(brec))
-			{
-				/*
-				try
-				{
-					
-					Date end_date = new Date();
-					long nmsec = end_date.getTime() - start_date.getTime();
-					this.speech_dur = (float)nmsec / 1000;
-					if (this.listening) {
-						Log.d(getClass().getName(), "Showing Dialog");
-						this.rec_dialog = ProgressDialog.show(MainActivity.this, "", "Recognizing speech...", true);
-						this.rec_dialog.setCancelable(false);
-						this.listening = false;
-					}
-					this.rec.stop(); 
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} */				
-				
-			}
 			break;
 			
 		default:
@@ -253,7 +242,7 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 			public void run() {
 				try
 				{
-					that.edit_text.setText(hyp);					
+					that.edit_text.setText("onPartial" + hyp);					
 				} 
 				catch (Exception exc)
 				{
@@ -283,13 +272,7 @@ public class MainActivity extends Activity implements OnTouchListener, Recogniti
 			public void run() {
 				try
 				{
-					that.edit_text.setText(hyp);					
-					Date end_date = new Date();
-					long nmsec = end_date.getTime() - that.start_date.getTime();
-					float rec_dur = (float)nmsec / 1000;
-					//that.performance_text.setText(String.format("%.2f seconds %.2f xRT", that.speech_dur, rec_dur / that.speech_dur));
-					Log.d(getClass().getName(), "Hiding Dialog");
-					
+					that.edit_text.setText("onResults" + hyp);										
 				} 
 				catch (Exception exc)
 				{

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +39,10 @@ import edu.cmu.pocketsphinx.Config;
 import edu.cmu.pocketsphinx.pocketsphinx;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Resources;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.widget.MultiAutoCompleteTextView.CommaTokenizer;
 
@@ -52,8 +56,9 @@ public class GrammarTools  {
 	public boolean recycledecoder;
 	private int dictbase;
 	private Hashtable<String, Hashtable<String, String>> htDict;
+	private Context _context;
 	
-	public GrammarTools (String language)
+	public GrammarTools (String language , Context _context)
 	{
 		lang = language;
 		pathgram = String.format(  "/sdcard/Android/data/pocketsphinx/lm/%s/gramj.txt" , language );
@@ -63,6 +68,7 @@ public class GrammarTools  {
 		if (language.equals("en_US")) dictbase = R.raw.cmudict07a;
 		if (language.equals("es")) dictbase = R.raw.voxforge_es_sphinx_fix;
 		
+		this._context = _context;
 	}
 
 	public void InstallModels(String Language , Resources myResources) throws Exception
@@ -87,6 +93,10 @@ public class GrammarTools  {
 	    	CopyFileTo(myResources.openRawResource(R.raw.transitionmatrices),new FileOutputStream(new File(dirAm,"transition_matrices")));
 	    	CopyFileTo(myResources.openRawResource(R.raw.variances),new FileOutputStream(new File(dirAm,"variances")));    	
 	    	CopyFileTo(myResources.openRawResource(R.raw.mdef),new FileOutputStream(new File(dirAm,"mdef")));  		
+	    	
+	    	// copia para os bancos
+	    	CopyFileTo(myResources.openRawResource(R.raw.enus),new FileOutputStream(new File("/data/data/com.pocketsphinxapi.consumer/databases/","enus.db")));
+	    	
     	}
     	else if (Language.equals("es"))   		
     	{    		
@@ -144,42 +154,38 @@ public class GrammarTools  {
 	        outpw.println(jheader);
 	        outFileG.close();		
 			
+
+	    	FileWriter outFile = new FileWriter(pathdic);
+	    	PrintWriter out = new PrintWriter(outFile);        	
+	        	        
+	    	DataBaseHelper dh = new DataBaseHelper(_context , "enus.db" , resources);
+	    
+	 
+		 	try {
+		 
+		 		dh.openDataBase();
+		 
+		 	}catch(SQLException sqle){
+		 
+		 		throw sqle;
+		 
+		 	}	    	
+		    	
+	    	
 	        witr = comandsarray.iterator();
 	        while( witr.hasNext() ) 
 	        {
 	        	String comando = (String)witr.next();     
 	        	String[] splitwords = comando.split(" ");
 	        	for (int i = 0 ; i <= splitwords.length - 1; i++)
-	        	{
-	        		wordList.add(splitwords[i]);
+	        	{	        		
+		   	    	 List<String> names = dh.selectAll(splitwords[i]);
+			         for (String name : names) {
+		        		out.println(name);
+			         }
 	        	}        	
 	        }
-	        
-	        Iterator<String> itr = wordList.iterator();        
-
-	    	InputStreamReader in= new InputStreamReader(resources.openRawResource(dictbase));
-	    	BufferedReader reader= new BufferedReader(in);
-	    	
-	    	// ja salva no dic final
-	    	FileWriter outFile = new FileWriter(pathdic);
-	    	PrintWriter out = new PrintWriter(outFile);        	
-	    	
-        	String text = null;   
-        	boolean lastadd = false;
-        	String lastword = null;
-        	while ((text = reader.readLine()) != null) 
-        	{
-        		String[] split = text.toUpperCase().split("	");
-        		
-        		String palavradic = split[0].substring(0,   split[0].indexOf('(') > -1 ? split[0].indexOf('(') : split[0].length()  );
-        		        	
-        		if ( wordList.contains(palavradic) || palavradic.equals(lastword) ) {
-        			out.println(text);
-        			lastword = palavradic;
-        			wordList.remove(palavradic);
-        		}        			
-        	}
-	    	
+	        	        	        	        
         	out.close(); 
 	    	out = null;
 	    	
@@ -199,12 +205,8 @@ public class GrammarTools  {
         	
         	postData();
         	
-	    	in.close();
-	    	reader.close();	    	        
-	    	in = null;
-	    	reader = null;
 	    	wordList = null;
-	    	itr = null;
+	    	
 	    	outFileG = null;
 	    	outpw = null;
 	    	comandsarray = null;

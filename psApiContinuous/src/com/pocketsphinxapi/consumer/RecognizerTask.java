@@ -136,6 +136,8 @@ public class RecognizerTask implements Runnable {
 		}
 	}
 
+	public boolean decodconfd = false;
+	public boolean done = false;
 	private Config c; 	
 	public Decoder ps;
 	AudioTask audio;
@@ -151,7 +153,7 @@ public class RecognizerTask implements Runnable {
 	};
 
 	Event semaphore;
-	private boolean resetdecoder = true;
+	
 	private GrammarTools gram;
 	private RecognizerTask recognizer;
 
@@ -173,16 +175,12 @@ public class RecognizerTask implements Runnable {
 	
 	public void doRecognize()
 	{
-		//if (this.c == null)
-		if (resetdecoder)
-			this.configure();
-		
-		//if  (this.ps == null)
-		if (resetdecoder)
+		if (!decodconfd)
 		{
-			this.resetdecoder = false;						
+			decodconfd = true;
+			this.configure();		
 			this.ps = new Decoder(this.c);
-		}	
+		}
 	}
 	
 	public RecognizerTask(GrammarTools gram) {
@@ -191,7 +189,7 @@ public class RecognizerTask implements Runnable {
 		this.use_partials = false;
 		this.semaphore = Event.NONE;	
 		this.gram = gram;
-		
+
 	}
 
 	private void configure() {
@@ -208,20 +206,24 @@ public class RecognizerTask implements Runnable {
 		this.c.setString("-jsgf",gram.pathgram);
 						
 		// LOG FILES 
-		c.setString("-rawlogdir", "/sdcard/Android/data/pocketsphinx");		
+		//c.setString("-rawlogdir", "/sdcard/Android/data/pocketsphinx");		
 		pocketsphinx.setLogfile("/sdcard/Android/data/pocketsphinx/pocketsphinx.log");
 		
 		this.c.setFloat("-samprate", 8000);
-		this.c.setInt("-maxhmmpf", 2000);
+		this.c.setInt("-maxhmmpf", 3000);
 		this.c.setInt("-maxwpf", 10);
 		this.c.setInt("-pl_window", 2);
 		this.c.setBoolean("-backtrace", true);		
-		this.c.setBoolean("-bestpath", false); 		
+		this.c.setBoolean("-bestpath", true);
+		this.c.setBoolean("-fwdflat", true);
+		this.c.setBoolean("-fwdtree", true);
+		
+		
+		
 	}
 
 	public void run() {
 
-		boolean done = false;
 
 		State state = State.IDLE;
 		
@@ -323,7 +325,6 @@ public class RecognizerTask implements Runnable {
 				this.audio = null;
 				this.audio_thread = null;
 				state = State.IDLE;
-				done = true;
 				break;
 			}
 			
@@ -351,10 +352,18 @@ public class RecognizerTask implements Runnable {
 				}
 			}
 		}
+		
+		String end = "final";
 	}
 
 	public void start() {
+		
+		doRecognize();
+		Log.d(getClass().getName(), "Configuring decoder");
+		
+		
 		Log.d(getClass().getName(), "signalling START");
+		
 		synchronized (this.semaphore) {
 			this.semaphore.notifyAll();
 			Log.d(getClass().getName(), "signalled START");
@@ -379,22 +388,12 @@ public class RecognizerTask implements Runnable {
 			this.semaphore = Event.SHUTDOWN;
 		}
 	}
-	
-	public void Reset() 
-	{		
-		if (this.ps != null)
-		{
-			this.ps.delete();			
-		}
-	
-		if (this.c != null)
-		{			
-			//this.c.delete();					
-		}		
-		
-		resetdecoder = true;
-		this.ps = null;
-		this.c = null;
-		System.gc();
+
+	public void stopListen() {
+
+		done = true;
+		this.audio.done = true;
 	}
+	
+
 }
