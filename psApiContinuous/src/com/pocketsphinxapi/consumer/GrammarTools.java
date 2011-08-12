@@ -143,7 +143,7 @@ public class GrammarTools  {
 			Iterator<String> witr = comandsarray.iterator();
 			
 			// cria jsgf         
-			String jheader = "#JSGF V1.0;grammar simpleExample;public <greet> = %s ; public <completeGreet> = <greet> <greet> <greet> <greet> <greet> <greet> <greet> <greet> <greet> <greet>; ";
+			String jheader = "#JSGF V1.0;grammar simpleExample;public <greet> = %s ; public <completeGreet> = <greet> *; ";
 			String words = "";
 	        while( witr.hasNext() ) 
 	        {
